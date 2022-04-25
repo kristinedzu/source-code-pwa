@@ -1,0 +1,65 @@
+.btn-primary {
+  background-color: #32746d;
+}
+
+.btn-secondary {
+  color: #32746d;
+}
+
+.btn-nav:hover {
+  background-color: #d8dbe2;
+  cursor: pointer;
+}
+
+.btn-delete {
+  background-color: #88292f;
+}
+
+.copyButton {
+  color: #32746d;
+  position: absolute;
+  top: 15px;
+  right: 15px;
+}
+
+.bg-text {
+  background-color: white;
+}
+
+.height {
+  min-height: 25rem;
+}
+
+/* side slide out bar */
+#sidebarMenu {
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 700px;
+  transform: translateX(700px);
+  transition: transform 450ms ease-in-out;
+}
+
+.open:checked ~ #sidebarMenu {
+  transform: translateX(0);
+}
+
+.open {
+  transition: all 0.3s;
+  box-sizing: border-box;
+  display: none;
+}
+
+.sidebarIconToggle {
+  cursor: pointer;
+  position: absolute;
+  z-index: 99;
+  height: 100%;
+  width: 100%;
+  height: 35px;
+  width: 60px;
+}
+
+.code {
+  height: 150px;
+}
