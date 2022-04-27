@@ -73,6 +73,14 @@ export default function App() {
             </li>
             <li>
               <div className="ml-3 flex text-slate-200">
+                <i className="ri-book-open-line"></i>
+                <Link to="/mysnippets" className="ml-2 hover:underline">
+                  My snippets
+                </Link>
+              </div>
+            </li>
+            <li>
+              <div className="ml-3 flex text-slate-200">
                 <i className="ri-heart-line"></i>
                 <Link to="/favorite" className="ml-2 hover:underline">
                   Favorite snippets
@@ -108,6 +116,21 @@ export default function App() {
               <i className="ri-add-line"></i>
                 <Link to="/new" className="ml-2 hover:underline">
                   New snippet
+                </Link>
+              </div>
+            </li>
+          </ul>
+
+          <br />
+
+
+          <ul>
+            <p className="text-slate-400 text-sm">My account</p>
+            <li>
+              <div className="ml-3 flex text-slate-200">
+              <i className="ri-account-circle-line"></i>
+                <Link to="/login" className="ml-2 hover:underline">
+                  Log in
                 </Link>
               </div>
             </li>
