@@ -20,7 +20,7 @@ export default function Index() {
   return (
     <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
       <div>
-        <h1 className="text-2xl font-bold mb-10">My favorite snippets</h1>
+        <h1 className="text-2xl font-bold mb-10">My snippets</h1>
         <ul className="mt-5 list-disc">
           {snippets.filter(snippet => snippet.favorite === true).map((snippet) => {
             return (

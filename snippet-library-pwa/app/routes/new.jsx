@@ -1,5 +1,6 @@
 import { Form, redirect, json, useActionData } from "remix";
 import connectDb from "~/db/connectDb.server";
+import { getSession } from "./sessions.js";
 
 export async function action({ request }) {
   const form = await request.formData();
@@ -12,6 +13,16 @@ export async function action({ request }) {
       { errors: error.errors, values: Object.fromEntries(form) },
       { status: 400 }
     );
+  }
+}
+
+export async function loader({ request }) {
+  const session = await getSession(request.headers.get("Cookie"));
+  if(!session.has("userId")) {
+    throw redirect('/login');
+  }
+  else {
+    return null;
   }
 }
 

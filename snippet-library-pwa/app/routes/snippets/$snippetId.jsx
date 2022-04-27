@@ -1,6 +1,7 @@
 import { useLoaderData, useCatch, useFormAction, json, redirect, Form } from "remix";
 import connectDb from "~/db/connectDb.server.js";
 import copyCode from  "~/components/copy.js";
+import Editor from "@monaco-editor/react";
 
 export async function loader({ params }) {
   const db = await connectDb();
@@ -16,12 +17,12 @@ export async function loader({ params }) {
 export async function action({ request, params }) {
   const formData = await request.formData();
   const db = await connectDb();
+  const snippet = await db.models.Snippet.findById(params.snippetId);
   switch (formData.get("_method")) {
     case "delete":
       await db.models.Snippet.findByIdAndDelete(params.snippetId);
       return redirect("/snippets");
     case "favorite":
-      const snippet = await db.models.Snippet.findById(params.snippetId);
       snippet.favorite = !snippet.favorite;
       await snippet.save();
       console.log(snippet.favorite);
@@ -29,6 +30,10 @@ export async function action({ request, params }) {
     case "update":
       await db.models.Snippet.findByIdAndUpdate(params.snippetId, { title: formData.get("title"), lang: formData.get("lang"), code: formData.get("code"), description: formData.get("description") });
       return null;
+      // const thisSnippet = await db.models.Snippet.findById(params.snippetId);
+      // thisSnippet.code = formData.get("code");
+      // await thisSnippet.save();
+      // return null;
   }
 }
 
@@ -53,16 +58,22 @@ export default function SnippetPage() {
         <label className="font-bold">Description:</label>
         <p>{snippet.description}</p>
       </div>
-      <code>
+      <Editor
+        name="code"
+        height="50vh"
+        defaultLanguage="javascript"
+        defaultValue={snippet.code}
+      />
+      {/* <code>
         <pre>
           <div className="relative w-5/6">
           <textarea className="py-4 pl-4 pr-10 w-full height whitespace-pre-wrap outline-none bg-white" id="codeSnippet" cols="30" rows="10" readOnly value={snippet.code}></textarea>
           <button type="button" onClick={copyCode} className="copyButton text-2xl"><i className="ri-clipboard-line" id="copy-to"></i></button>
           </div>
         </pre>
-      </code>
+      </code> */}
       <div className="flex flex-wrap py-4">
-        <input type="checkbox" className="openSidebarMenu open" id="openSidebarMenu"/>
+        {/* <input type="checkbox" className="openSidebarMenu open" id="openSidebarMenu"/>
         <label htmlFor="openSidebarMenu" className="sidebarIconToggle"></label>
         <div id="sidebarMenu" className="p-6 bg-slate-300 min-h-screen ">
             <Form method="post" className="flex flex-col w-10/12 mx-auto mt-6">
@@ -112,7 +123,13 @@ export default function SnippetPage() {
         </div>
         <button type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
           Edit
-        </button>
+        </button> */}
+        <Form method="post">
+            <input type="hidden" name="_method" value="updates" />
+            <button type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
+             Save
+            </button>
+        </Form>
         <Form method="post">
             <input type="hidden" name="_method" value="delete" />
             <button type="submit" className="mx-4 btn-delete hover:bg-red-900 text-white py-2 px-4 rounded flex flex-wrap">
