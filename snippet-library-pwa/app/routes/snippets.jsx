@@ -17,7 +17,7 @@ export default function Index() {
 
   return (
     <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
-      <div>
+      <div className="border-r">
         <h1 className="text-2xl font-bold mb-10">All snippets</h1>
 
         <Form method="GET">
@@ -33,6 +33,7 @@ export default function Index() {
                   className="text-blue-600 hover:underline">
                   {snippet.title}
                 </Link>
+                <i className={snippet.favorite === true ? "ri-heart-fill ml-1" : "ri-heart-line ml-1"}></i>
               </li>
             );
           })}

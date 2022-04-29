@@ -1,6 +1,7 @@
 import {
   Links,
   Link,
+  NavLink,
   LiveReload,
   Meta,
   Outlet,
@@ -57,35 +58,56 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-slate-100 text-slate-800 font-sans grid grid-cols-[300px_1fr] gap-4">
-        <header className="p-6 bg-slate-800 min-h-screen">
+        <nav className="p-6 bg-slate-800 min-h-screen">
           <a href="/snippets">
             <img className="w-11/12 mt-4 mb-10" src="/images/logo.png" alt="" />
           </a>
           <p className="text-slate-400 text-sm">Snippet library</p>
           <ul>
-            <li>
-              <div className="ml-3 flex text-slate-200">
+            {/* <li>
+              <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
                 <i className="ri-book-open-line"></i>
-                <Link to="/snippets" className="ml-2 hover:underline">
+                <Link to="/snippets" className="ml-2">
                   All snippets
                 </Link>
               </div>
-            </li>
+            </li> */}
             <li>
-              <div className="ml-3 flex text-slate-200">
-                <i className="ri-book-open-line"></i>
-                <Link to="/mysnippets" className="ml-2 hover:underline">
+              {/* <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
+                
+                <NavLink to="/mysnippets" className={({ isActive }) =>
+              isActive ? "text-slate-700" : undefined
+            }>
+                  <i className="ri-book-open-line ml-2"></i>
                   My snippets
-                </Link>
-              </div>
+                </NavLink>
+              </div> */}
+              <NavLink to="/snippets">
+                {({ isActive }) => (
+                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"}>
+                    <i className="ri-book-open-line mr-2"></i>
+                    All snippets
+                  </div>
+                )}
+              </NavLink>
+              <NavLink to="/mysnippets">
+                {({ isActive }) => (
+                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"}>
+                    <i className="ri-book-open-line mr-2"></i>
+                    My snippets
+                  </div>
+                )}
+              </NavLink>
             </li>
             <li>
-              <div className="ml-3 flex text-slate-200">
-                <i className="ri-heart-line"></i>
-                <Link to="/favorite" className="ml-2 hover:underline">
-                  Favorite snippets
-                </Link>
-              </div>
+              <NavLink to="/favorite">
+                {({ isActive }) => (
+                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"}>
+                    <i className="ri-heart-line mr-2"></i>
+                    Favourite
+                  </div>
+                )}
+              </NavLink>
             </li>
           </ul>
 
@@ -96,12 +118,20 @@ export default function App() {
             {langArray.map((lang) => {
                 return (
                   <li key={lang}>
-                    <div className="ml-3 flex text-slate-200">
+                    {/* <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
                       <i className="ri-code-line"></i>
-                      <Link to={`/${lang}`} className="ml-2 hover:underline">
+                      <Link to={`/${lang}`} className="ml-2">
                         {lang}
                       </Link>
-                    </div>
+                    </div> */}
+                    <NavLink to={`/${lang}`}>
+                      {({ isActive }) => (
+                        <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"}>
+                          <i className="ri-code-line mr-2"></i>
+                          {lang}
+                        </div>
+                      )}
+                    </NavLink>
                   </li>
                   );
               })};
@@ -112,12 +142,20 @@ export default function App() {
           <ul>
             <p className="text-slate-400 text-sm">Add new snippet</p>
             <li>
-              <div className="ml-3 flex text-slate-200">
+              {/* <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
               <i className="ri-add-line"></i>
-                <Link to="/new" className="ml-2 hover:underline">
+                <Link to="/new" className="ml-2">
                   New snippet
                 </Link>
-              </div>
+              </div> */}
+              <NavLink to="/new">
+                {({ isActive }) => (
+                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"}>
+                    <i className="ri-add-line mr-2"></i>
+                    New snippet
+                  </div>
+                )}
+              </NavLink>
             </li>
           </ul>
 
@@ -127,15 +165,15 @@ export default function App() {
           <ul>
             <p className="text-slate-400 text-sm">My account</p>
             <li>
-              <div className="ml-3 flex text-slate-200">
+              <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
               <i className="ri-account-circle-line"></i>
-                <Link to="/login" className="ml-2 hover:underline">
+                <Link to="/login" className="ml-2">
                   Log in
                 </Link>
               </div>
             </li>
           </ul>
-        </header>
+        </nav>
         <Outlet />
         <ScrollRestoration />
         <Scripts />
