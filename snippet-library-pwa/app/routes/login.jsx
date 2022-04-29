@@ -87,7 +87,7 @@ export default function Login() {
         <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
           <div>
             <h1 className="text-2xl font-bold mb-10">You are logged in as:</h1>
-            <p className="mb-5">{user.username}</p>
+            <p className="mb-10">{user.username}</p>
     
             <Form method="post" action="/logout">
                 <button type="submit" className="btn-delete hover:bg-red-900 text-white py-2 px-4 rounded">

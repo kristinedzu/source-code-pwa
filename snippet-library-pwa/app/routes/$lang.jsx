@@ -18,15 +18,16 @@ export default function SnippetsLangPage() {
   const snippets = useLoaderData();
   return (
     <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
-      <div>
+      <div className="border-r">
         <h1 className="text-2xl font-bold mb-10">{lang}</h1>
-        <ul className="mt-5 list-disc">
+        <ul className="mt-5 list-disc mr-4">
           {snippets.map((snippet) => {
             return (
-              <li key={snippet._id} className="list-none p-2 border-l">
+              <li key={snippet._id} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center">
+                <i className={snippet.favorite === true ? "ri-heart-fill text-teal-700 mr-2" : "ri-heart-line mr-2"}></i>
                 <Link
                   to={`/${lang}/${snippet._id}`}
-                  className="text-blue-600 hover:underline">
+                  className="hover:underline">
                   {snippet.title}
                 </Link>
               </li>

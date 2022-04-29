@@ -21,19 +21,24 @@ export default function Index() {
         <h1 className="text-2xl font-bold mb-10">All snippets</h1>
 
         <Form method="GET">
-          <input onChange={e => submit(e.currentTarget.form)} type="text" name="query" placeholder="Search..." className="mb-4 text-slate-600 p-2 w-96"/>
+          <input onChange={e => submit(e.currentTarget.form)} type="text" name="query" placeholder="Search..." className="mb-4 text-slate-600 p-2 w-96 rounded-md"/>
         </Form>
 
-        <ul className="mt-5 list-disc">
+        <ul className="mt-5 list-disc mr-4">
           {snippets.map((snippet) => {
             return (
-              <li key={snippet._id} className="list-none p-2 border-l">
-                <Link
-                  to={`/snippets/${snippet._id}`}
-                  className="text-blue-600 hover:underline">
-                  {snippet.title}
-                </Link>
-                <i className={snippet.favorite === true ? "ri-heart-fill ml-1" : "ri-heart-line ml-1"}></i>
+              <li key={snippet._id} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between">
+                <div className="flex items-center">
+                  <i className={snippet.favorite === true ? "ri-heart-fill text-teal-700 mr-2" : "ri-heart-line mr-2"}></i>
+                  <Link
+                    to={`/snippets/${snippet._id}`}
+                    className="hover:underline">
+                    {snippet.title}
+                  </Link>
+                </div>
+                <div className="py-1 px-3 bg-indigo-200 w-fit h-min rounded-3xl justify-self-end">
+                    <p className="text-xs font-semibold text-indigo-600">{snippet.lang}</p>
+                </div>
               </li>
             );
           })}
