@@ -4,11 +4,13 @@ import { getSession } from "./sessions.js";
 
 export async function loader( {request} ) {
   const session = await getSession(request.headers.get("Cookie"));
+  loggedUserId = session.get("userId");
+  console.log(loggedUserId);
   if(!session.has("userId")) {
     throw redirect('/login');
   } else {
     const db = await connectDb();
-    const snippets = await db.models.Snippet.find();
+    const snippets = await db.models.Snippet.find({uid: loggedUserId});
     return snippets;
   }
   
@@ -22,7 +24,7 @@ export default function Index() {
       <div className="border-r">
         <h1 className="text-2xl font-bold mb-10">My snippets</h1>
         <ul className="mt-5 list-disc mr-4">
-          {snippets.filter(snippet => snippet.favorite === true).map((snippet) => {
+          {snippets.map((snippet) => {
             return (
               <li key={snippet._id} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between">
                 <div className="flex items-center">

@@ -19,7 +19,6 @@ export async function action({ request }) {
 
 export async function loader({ request }) {
   const session = await getSession(request.headers.get("Cookie"));
-  console.log(session.get("userId"));
   if(!session.has("userId")) {
     throw redirect('/login');
   }
