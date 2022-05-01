@@ -8,7 +8,7 @@ export async function action({ request }) {
   const session = await getSession(request.headers.get("Cookie"));
   try {
     const newSnippet = await db.models.Snippet.create({ title: form.get("title"), lang: form.get("lang"), code: form.get("code"), description: form.get("description"), favorite: false, uid: session.get("userId") });
-    return redirect(`/snippets/${newSnippet._id}`);
+    return redirect(`/mysnippets/${newSnippet._id}`);
   } catch (error) {
     return json(
       { errors: error.errors, values: Object.fromEntries(form) },

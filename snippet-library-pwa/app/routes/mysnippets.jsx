@@ -30,7 +30,7 @@ export default function Index() {
                 <div className="flex items-center">
                   <i className={snippet.favorite === true ? "ri-heart-fill text-teal-700 mr-2" : "ri-heart-line mr-2"}></i>
                   <Link
-                    to={`/favorite/${snippet._id}`}
+                    to={`/mysnippets/${snippet._id}`}
                     className="hover:underline">
                     {snippet.title}
                   </Link>
