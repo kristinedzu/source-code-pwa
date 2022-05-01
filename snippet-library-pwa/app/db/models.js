@@ -26,6 +26,10 @@ const snippetSchema = new Schema({
   favorite: {
     type: Boolean,
     required: true
+  },
+  uid: {
+    type: String,
+    required: true
   }
 });
 

@@ -5,8 +5,9 @@ import { getSession } from "./sessions.js";
 export async function action({ request }) {
   const form = await request.formData();
   const db = await connectDb();
+  const session = await getSession(request.headers.get("Cookie"));
   try {
-    const newSnippet = await db.models.Snippet.create({ title: form.get("title"), lang: form.get("lang"), code: form.get("code"), description: form.get("description"), favorite: false });
+    const newSnippet = await db.models.Snippet.create({ title: form.get("title"), lang: form.get("lang"), code: form.get("code"), description: form.get("description"), favorite: false, uid: session.get("userId") });
     return redirect(`/snippets/${newSnippet._id}`);
   } catch (error) {
     return json(
@@ -18,6 +19,7 @@ export async function action({ request }) {
 
 export async function loader({ request }) {
   const session = await getSession(request.headers.get("Cookie"));
+  console.log(session.get("userId"));
   if(!session.has("userId")) {
     throw redirect('/login');
   }
