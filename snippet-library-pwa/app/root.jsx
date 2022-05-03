@@ -55,8 +55,8 @@ export async function redirect() {
 
 export default function App() {
   
-  const snippets = useLoaderData();
-  var langs = new Set(snippets.snippets.map(snippet => snippet.lang));
+  const data = useLoaderData();
+  var langs = new Set(data.snippets.map(snippet => snippet.lang));
   var langArray = Array.from(langs);
 
     return (
@@ -166,7 +166,7 @@ export default function App() {
               <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
               <i className="ri-account-circle-line"></i>
                 <Link to="/login" className="ml-2">
-                 {snippets.user? snippets.user?.username : "Log in" }
+                 {data.user? data.user?.username : "Log in" }
                 </Link> 
               </div>
             </li>
