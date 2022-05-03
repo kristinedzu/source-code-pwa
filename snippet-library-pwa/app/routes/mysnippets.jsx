@@ -1,4 +1,4 @@
-import { useLoaderData, Link, Outlet, redirect } from "remix";
+import { useLoaderData, Link, Outlet, redirect, json } from "remix";
 import connectDb from "~/db/connectDb.server.js";
 import { getSession } from "./sessions.js";
 
@@ -11,7 +11,10 @@ export async function loader( {request} ) {
   } else {
     const db = await connectDb();
     const snippets = await db.models.Snippet.find({uid: loggedUserId});
-    return snippets;
+    
+    return json ({
+      snippets,
+      user: "Maddy"});
   }
   
 }
@@ -23,8 +26,9 @@ export default function Index() {
     <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
       <div className="border-r">
         <h1 className="text-2xl font-bold mb-10">My snippets</h1>
+        <p>{snippets.user}</p>
         <ul className="mt-5 list-disc mr-4">
-          {snippets.map((snippet) => {
+          {snippets.snippets.map((snippet) => {
             return (
               <li key={snippet._id} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between">
                 <div className="flex items-center">

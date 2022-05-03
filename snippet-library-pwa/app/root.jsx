@@ -7,11 +7,13 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-  useLoaderData
+  useLoaderData,
+  json
 } from "remix";
 import styles from "~/tailwind.css";
 import customStyles from "~/custom.css";
 import connectDb from "~/db/connectDb.server.js";
+import { getSession } from "./routes/sessions.js";
 
 export const links = () => [
   {
@@ -31,15 +33,20 @@ export const links = () => [
 export function meta() {
   return {
     charset: "utf-8",
-    title: "Remix + MongoDB",
+    title: "SourceCode",
     viewport: "width=device-width,initial-scale=1",
   };
 }
 
-export async function loader() {
+export async function loader({request}) {
+  const session = await getSession(request.headers.get("Cookie"));
+  loggedUserId = session.get("userId");
   const db = await connectDb();
   const snippets = await db.models.Snippet.find();
-  return snippets;
+  return json ({
+    snippets,
+    user: await db.models.User.findById(session.get("userId")),
+  });
 }
 
 export async function redirect() {
@@ -49,8 +56,9 @@ export async function redirect() {
 export default function App() {
   
   const snippets = useLoaderData();
-  var langs = new Set(snippets.map(snippet => snippet.lang));
+  var langs = new Set(snippets.snippets.map(snippet => snippet.lang));
   var langArray = Array.from(langs);
+
     return (
     <html lang="en">
       <head>
@@ -158,8 +166,8 @@ export default function App() {
               <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
               <i className="ri-account-circle-line"></i>
                 <Link to="/login" className="ml-2">
-                  Log in
-                </Link>
+                 {snippets.user? snippets.user?.username : "Log in" }
+                </Link> 
               </div>
             </li>
           </ul>
