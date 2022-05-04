@@ -28,7 +28,7 @@ export default function Index() {
             return (
               <li key={snippet._id} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between">
                 <div className="flex items-center">
-                  <i className={snippet.favorite === true ? "ri-heart-fill text-teal-700 mr-2" : "ri-heart-line mr-2"}></i>
+                  <i className={snippet.favorite === true ? "ri-heart-fill text-teal-700 mr-2" : ""}></i>
                   <Link
                     to={`/mysnippets/${snippet._id}`}
                     className="hover:underline">
