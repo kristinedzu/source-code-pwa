@@ -66,11 +66,8 @@ export default function App() {
         <link rel="manifest" href="/app.webmanifest?v=3" />
         <Links />
       </head>
-      <body className="bg-slate-100 text-slate-800 font-sans grid sm:grid-cols-[1fr] md:grid-cols-[300px_1fr] gap-4">
-        <input type="checkbox" className="openSidebarMenu open" id="openSidebarMenu"/>
-        <label htmlFor="openSidebarMenu" className="sidebarIconToggle"></label>
-        <div id="sidebarMenu" className="p-6 bg-slate-300 min-h-screen ">
-        <nav className="px-6 pb-6 bg-slate-800 min-h-screen">
+      <body className="bg-slate-100 text-slate-800 font-sans grid sm:grid-cols-[1fr] lg:grid-cols-[300px_1fr] gap-4">
+        <nav className="px-6 pb-6 bg-slate-800 min-h-screen hidden sm:hidden md:hidden lg:w-auto lg:block">
           <a href="/snippets">
             <img className="w-11/12 mt-4 mb-10" src="/images/logo.png" alt="" />
           </a>
@@ -171,16 +168,15 @@ export default function App() {
               <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
               <i className="ri-account-circle-line"></i>
                 <Link to="/login" className="ml-2">
-                 {data.user? data.user?.username : "Log in" }
+                {data.user? data.user?.username : "Log in" }
                 </Link> 
               </div>
             </li>
           </ul>
         </nav>
-        </div>
-        <button type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
+        {/* <button type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
           Nav
-        </button>
+        </button> */}
         {/* <nav className="p-6 bg-slate-800 min-h-screen sm:w-32 lg:w-auto">
           <a href="/snippets">
             <img className="w-11/12 mt-4 mb-10" src="/images/logo.png" alt="" />

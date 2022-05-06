@@ -468,6 +468,40 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-backdrop-sepia:  ;
 }
 
+.container {
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container {
+    max-width: 640px;
+  }
+}
+
+@media (min-width: 768px) {
+  .container {
+    max-width: 768px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    max-width: 1024px;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    max-width: 1280px;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    max-width: 1536px;
+  }
+}
+
 .relative {
   position: relative;
 }
@@ -901,6 +935,14 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 @media (min-width: 640px) {
+  .sm\:flex {
+    display: flex;
+  }
+
+  .sm\:hidden {
+    display: none;
+  }
+
   .sm\:w-32 {
     width: 8rem;
   }
@@ -915,18 +957,34 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 @media (min-width: 768px) {
+  .md\:hidden {
+    display: none;
+  }
+
   .md\:grid-cols-\[300px_1fr\] {
     grid-template-columns: 300px 1fr;
+  }
+
+  .md\:grid-cols-\[1fr\] {
+    grid-template-columns: 1fr;
   }
 }
 
 @media (min-width: 1024px) {
+  .lg\:block {
+    display: block;
+  }
+
   .lg\:w-auto {
     width: auto;
   }
 
   .lg\:w-full {
     width: 100%;
+  }
+
+  .lg\:grid-cols-\[300px_1fr\] {
+    grid-template-columns: 300px 1fr;
   }
 }
 
