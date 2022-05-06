@@ -50,6 +50,16 @@
   display: none;
 }
 
+/* .close:checked ~ #sidebarMenu {
+  transform: translateX(700px);
+}
+
+.close {
+  transition: all 0.3s;
+  box-sizing: border-box;
+  display: none;
+} */
+
 .sidebarIconToggle {
   cursor: pointer;
   position: absolute;

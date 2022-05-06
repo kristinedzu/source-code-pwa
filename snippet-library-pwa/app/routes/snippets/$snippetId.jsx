@@ -66,7 +66,7 @@ export default function SnippetPage() {
       /> */}
       <code>
         <pre>
-          <div className="relative w-5/6">
+          <div className="relative lg:w-full xl:w-5/6">
           <textarea className="py-4 pl-4 pr-10 w-full height whitespace-pre-wrap outline-none bg-white" id="codeSnippet" cols="30" rows="10" readOnly value={snippet.code}></textarea>
           <button type="button" onClick={copyCode} className="copyButton text-2xl"><i className="ri-clipboard-line" id="copy-to"></i></button>
           </div>

@@ -1,0 +1,39 @@
+{
+    "short_name": "Source Code",
+    "name": "Source Code: your favourite snippets",
+    "icons": [
+      {
+        "src": "/images/icon192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      },
+      {
+        "src": "/images/icon144.png",
+        "type": "image/png",
+        "sizes": "144x144"
+      },
+      {
+        "src": "/images/icon96.png",
+        "type": "image/png",
+        "sizes": "96x96"
+      }
+    ],
+    "start_url": "/?source=pwa",
+    "background_color": "#20293A",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#20293A",
+    "description": "Code snippets for you!",
+    "screenshots": [
+      {
+        "src": "/images/screen1.png",
+        "type": "image/png",
+        "sizes": "1600x960"
+      },
+      {
+        "src": "/images/screen2.png",
+        "type": "image/png",
+        "sizes": "1280x720"
+      }
+    ]
+  }
