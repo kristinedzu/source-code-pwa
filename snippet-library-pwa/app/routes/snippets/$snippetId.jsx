@@ -58,20 +58,20 @@ export default function SnippetPage() {
         <label className="font-bold">Description:</label>
         <p>{snippet.description}</p>
       </div>
-      {/* <Editor
+      <Editor
         name="code"
         height="50vh"
         defaultLanguage="javascript"
-        defaultValue={snippet.code}
-      /> */}
-      <code>
+        value={snippet.code}
+      />
+      {/* <code>
         <pre>
           <div className="relative lg:w-full xl:w-5/6">
           <textarea className="py-4 pl-4 pr-10 w-full height whitespace-pre-wrap outline-none bg-white" id="codeSnippet" cols="30" rows="10" readOnly value={snippet.code}></textarea>
           <button type="button" onClick={copyCode} className="copyButton text-2xl"><i className="ri-clipboard-line" id="copy-to"></i></button>
           </div>
         </pre>
-      </code>
+      </code> */}
       <div className="flex flex-wrap py-4">
         {/* <input type="checkbox" className="openSidebarMenu open" id="openSidebarMenu"/>
         <label htmlFor="openSidebarMenu" className="sidebarIconToggle"></label>
@@ -125,7 +125,7 @@ export default function SnippetPage() {
           Edit
         </button> */}
         <Form method="post">
-            <input type="hidden" name="_method" value="updates" />
+            <input type="hidden" name="_method" value="update" />
             <button type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
              Save
             </button>
