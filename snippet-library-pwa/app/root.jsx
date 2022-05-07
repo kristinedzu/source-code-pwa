@@ -14,6 +14,7 @@ import styles from "~/tailwind.css";
 import customStyles from "~/custom.css";
 import connectDb from "~/db/connectDb.server.js";
 import { getSession } from "./routes/sessions.js";
+import React from 'react';
 
 export const links = () => [
   {
@@ -59,6 +60,17 @@ export default function App() {
   var langs = new Set(data.snippets.map(snippet => snippet.lang));
   var langArray = Array.from(langs);
 
+  function openCloseNav(){
+    const nav = document.getElementById("nav");
+    nav.classList.toggle("open"); 
+    console.log("Nav clicked!");
+  }
+
+  function closeNav(){
+    const nav = document.getElementById("nav");
+    nav.classList.remove("open"); 
+  }
+
     return (
     <html lang="en">
       <head>
@@ -67,7 +79,10 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-slate-100 text-slate-800 font-sans grid sm:grid-cols-[1fr] lg:grid-cols-[300px_1fr] gap-4">
-        <nav className="px-6 pb-6 bg-slate-800 min-h-screen hidden sm:hidden md:hidden lg:w-auto lg:block">
+        <div onClick={openCloseNav} className="bg-slate-800 text-slate-100 p-4 sm:block md:block lg:hidden">
+          <i className="ri-menu-5-line mr-2"></i>
+        </div>
+        <nav id="nav" className="nav px-6 pb-6 bg-slate-800 min-h-screen hidden sm:block sm:fixed md:block md:fixed lg:w-auto lg:block">
           <a href="/snippets">
             <img className="w-11/12 mt-4 mb-10" src="/images/logo.png" alt="" />
           </a>
@@ -94,7 +109,7 @@ export default function App() {
               
               <NavLink to="/snippets">
                 {({ isActive }) => (
-                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md mb-1" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md mb-1"}>
+                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md mb-1" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md mb-1"} onClick={closeNav}>
                     <i className="ri-book-open-line mr-2"></i>
                     All snippets
                   </div>
@@ -102,7 +117,7 @@ export default function App() {
               </NavLink>
               <NavLink to="/mysnippets">
                 {({ isActive }) => (
-                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md mb-1" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md mb-1"}>
+                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md mb-1" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md mb-1"} onClick={closeNav}>
                     <i className="ri-book-open-line mr-2"></i>
                     My snippets
                   </div>
@@ -112,7 +127,7 @@ export default function App() {
             <li>
               <NavLink to="/favorite">
                 {({ isActive }) => (
-                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"}>
+                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"} onClick={closeNav}>
                     <i className="ri-heart-line mr-2"></i>
                     Favourite
                   </div>
@@ -133,7 +148,7 @@ export default function App() {
                     </div> */}
                     <NavLink to={`/${lang}`}>
                       {({ isActive }) => (
-                        <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md mb-1" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md mb-1"}>
+                        <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md mb-1" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md mb-1"} onClick={closeNav}>
                           <i className="ri-code-line mr-2"></i>
                           {lang}
                         </div>
@@ -154,7 +169,7 @@ export default function App() {
               </div> */}
               <NavLink to="/new">
                 {({ isActive }) => (
-                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"}>
+                  <div className={isActive ? "flex text-slate-200 px-3 py-2 duration-200 bg-slate-700 rounded-md" : "flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md"} onClick={closeNav}>
                     <i className="ri-add-line mr-2"></i>
                     New snippet
                   </div>
@@ -167,7 +182,7 @@ export default function App() {
             <li>
               <div className="flex text-slate-200 px-3 py-2 duration-200 hover:bg-slate-700 hover:rounded-md">
               <i className="ri-account-circle-line"></i>
-                <Link to="/login" className="ml-2">
+                <Link to="/login" className="ml-2" onClick={closeNav}>
                 {data.user? data.user?.username : "Log in" }
                 </Link> 
               </div>

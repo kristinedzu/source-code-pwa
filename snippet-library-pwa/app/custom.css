@@ -31,23 +31,29 @@
 }
 
 /* side slide out bar */
-#sidebarMenu {
+/* #sidebarMenu {
   position: fixed;
   right: 0;
   top: 0;
   width: 700px;
   transform: translateX(700px);
   transition: transform 450ms ease-in-out;
+} */
+.nav {
+  left: 3000px;
+  top: 50px;
+  width: 100%;
+  transition: all 0.3s;
+  z-index: 99999;
 }
 
-.open:checked ~ #sidebarMenu {
+/* .open:checked ~ #sidebarMenu {
   transform: translateX(0);
-}
+} */
 
 .open {
-  transition: all 0.3s;
   box-sizing: border-box;
-  display: none;
+  left: 0;
 }
 
 /* .close:checked ~ #sidebarMenu {
@@ -60,7 +66,7 @@
   display: none;
 } */
 
-.sidebarIconToggle {
+/* .sidebarIconToggle {
   cursor: pointer;
   position: absolute;
   z-index: 99;
@@ -68,7 +74,7 @@
   width: 100%;
   height: 35px;
   width: 60px;
-}
+} */
 
 .code {
   height: 150px;
