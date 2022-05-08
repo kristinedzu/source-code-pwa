@@ -502,8 +502,20 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 }
 
+.fixed {
+  position: fixed;
+}
+
 .relative {
   position: relative;
+}
+
+.-left-full {
+  left: -100%;
+}
+
+.top-12 {
+  top: 3rem;
 }
 
 .m-4 {
@@ -525,6 +537,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-right: 1rem;
 }
 
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
 .mt-4 {
   margin-top: 1rem;
 }
@@ -543,10 +559,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .ml-2 {
   margin-left: 0.5rem;
-}
-
-.mr-2 {
-  margin-right: 0.5rem;
 }
 
 .mt-5 {
@@ -725,16 +737,21 @@ Ensure the default browser behavior of the `hidden` attribute.
   background-color: rgb(203 213 225 / var(--tw-bg-opacity));
 }
 
+.bg-slate-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(148 163 184 / var(--tw-bg-opacity));
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
 .p-6 {
   padding: 1.5rem;
 }
 
 .p-2 {
   padding: 0.5rem;
-}
-
-.p-4 {
-  padding: 1rem;
 }
 
 .px-6 {
@@ -846,6 +863,11 @@ Ensure the default browser behavior of the `hidden` attribute.
   color: rgb(30 41 59 / var(--tw-text-opacity));
 }
 
+.text-slate-100 {
+  --tw-text-opacity: 1;
+  color: rgb(241 245 249 / var(--tw-text-opacity));
+}
+
 .text-slate-400 {
   --tw-text-opacity: 1;
   color: rgb(148 163 184 / var(--tw-text-opacity));
@@ -889,11 +911,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .text-blue-600 {
   --tw-text-opacity: 1;
   color: rgb(37 99 235 / var(--tw-text-opacity));
-}
-
-.text-slate-100 {
-  --tw-text-opacity: 1;
-  color: rgb(241 245 249 / var(--tw-text-opacity));
 }
 
 .underline {
@@ -948,12 +965,28 @@ Ensure the default browser behavior of the `hidden` attribute.
     position: fixed;
   }
 
-  .sm\:block {
-    display: block;
+  .sm\:top-2 {
+    top: 0.5rem;
   }
 
-  .sm\:hidden {
-    display: none;
+  .sm\:-left-10 {
+    left: -2.5rem;
+  }
+
+  .sm\:top-96 {
+    top: 24rem;
+  }
+
+  .sm\:top-12 {
+    top: 3rem;
+  }
+
+  .sm\:-left-full {
+    left: -100%;
+  }
+
+  .sm\:block {
+    display: block;
   }
 
   .sm\:w-32 {
@@ -970,20 +1003,24 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 
 @media (min-width: 768px) {
-  .md\:fixed {
-    position: fixed;
-  }
-
   .md\:block {
     display: block;
-  }
-
-  .md\:hidden {
-    display: none;
   }
 }
 
 @media (min-width: 1024px) {
+  .lg\:relative {
+    position: relative;
+  }
+
+  .lg\:top-0 {
+    top: 0px;
+  }
+
+  .lg\:left-0 {
+    left: 0px;
+  }
+
   .lg\:block {
     display: block;
   }

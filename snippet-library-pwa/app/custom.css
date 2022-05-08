@@ -40,8 +40,6 @@
   transition: transform 450ms ease-in-out;
 } */
 .nav {
-  left: 3000px;
-  top: 50px;
   width: 100%;
   transition: all 0.3s;
   z-index: 99999;
