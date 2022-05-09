@@ -61,6 +61,10 @@ self.addEventListener('activate', (event) => {
 // });
 
 self.addEventListener('fetch', async (event) => {
+  // We only want to handle GET requests
+  if (event.request.method !== "GET") {
+    return;
+  }
   // if (event.request.mode === 'navigate') {
   //       event.respondWith((async () => {
   //         try {
@@ -106,20 +110,29 @@ self.addEventListener('fetch', async (event) => {
     switch (event.request.destination) {
       case ('document'):
       case ('build'):
-      case (""):
       case ('manifest'):
-        //Open the cache
-          return cache.match(event.request).then((cachedResponse) => {
-            const fetchedResponse = fetch(event.request).then((networkResponse) => {
-              if(networkResponse.statusText == "OK"){
-                cache.put(event.request, networkResponse.clone());
-      
-                return networkResponse;
-              }
-            });
+      //Network first fallback to cache
+        return fetch(event.request.url).then((fetchedResponse) => {
+          cache.put(event.request, fetchedResponse.clone());
+  
+          return fetchedResponse;
+        }).catch(() => {
+          // If the network is unavailable, get
+          return cache.match(event.request.url);
+        });
+      //Checking if URL has the snippet.id _data
+      case (""):
+        if(event.request.url.includes("_data")){
+          console.log("Works");
+          return fetch(event.request.url).then((fetchedResponse) => {
+            cache.put(event.request, fetchedResponse.clone());
     
-            return cachedResponse || fetchedResponse;
-          });
+            return fetchedResponse;
+          }).catch(() => {
+            // If the network is unavailable, get
+            return cache.match(event.request.url);
+          })
+        };
         case ('style'):
         case ('script'):
         case ('image'):
