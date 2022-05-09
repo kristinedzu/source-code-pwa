@@ -16,11 +16,11 @@ export async function loader({ params }) {
 }
 
 export async function action({ request, params }) {
+  
   const formData = await request.formData();
   const db = await connectDb();
   const snippet = await db.models.Snippet.findById(params.snippetId);
-
-
+  console.log(snippet.snippetId);
   switch (formData.get("_method")) {
     case "delete":
       await db.models.Snippet.findByIdAndDelete(params.snippetId);
