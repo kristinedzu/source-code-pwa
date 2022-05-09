@@ -5,7 +5,6 @@ import { getSession } from "./sessions.js";
 export async function loader( {request} ) {
   const session = await getSession(request.headers.get("Cookie"));
   loggedUserId = session.get("userId");
-  console.log(loggedUserId);
   if(!session.has("userId")) {
     throw redirect('/login');
   } else {

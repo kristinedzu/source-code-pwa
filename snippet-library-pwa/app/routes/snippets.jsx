@@ -20,7 +20,6 @@ export async function loader({ request}) {
 export default function Index() {
   const data = useLoaderData();
   const submit = useSubmit();
-  console.log(data.user)
 
   return (
     <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
