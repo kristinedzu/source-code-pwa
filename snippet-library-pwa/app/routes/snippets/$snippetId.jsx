@@ -2,7 +2,7 @@ import { useLoaderData, useCatch, useFormAction, json, redirect, Form } from "re
 import connectDb from "~/db/connectDb.server.js";
 import copyCode from  "~/components/copy.js";
 import Editor from "@monaco-editor/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export async function loader({ params }) {
   const db = await connectDb();
@@ -43,6 +43,10 @@ export default function SnippetPage() {
   function handleEditorChange(value, event) {
     setSnippetCode(value);
   }
+
+  useEffect(() => {
+    setSnippetCode(snippet.code)
+  },[snippet.code])
 
     
   return (
@@ -149,20 +153,30 @@ export default function SnippetPage() {
 
 export function CatchBoundary() {
   const caught = useCatch();
-  return (
-    <div>
-      <h1>
-        {caught.status} {caught.statusText}
-      </h1>
-      <h2>{caught.data}</h2>
-    </div>
-  );
+    return (
+      <div>
+        
+        <h1>
+          {caught.status} {caught.statusText}
+        </h1>
+        
+        <h2>{caught.data}</h2>
+      </div>
+    );
 }
 
 export function ErrorBoundary({ error }) {
-  return (
-    <h1 className="text-red-500 font-bold">
-      {error.name}: {error.message}
-    </h1>
-  );
+  if(error.message == "Failed to fetch"){
+    return (
+      <h1 className="text-red-500 font-bold">
+        "You are offline. Please connect to the internet to proceed."
+      </h1>
+    );
+  } else {
+    return (
+      <h1 className="text-red-500 font-bold">
+        {error.name}: {error.message}
+      </h1>
+    );
+  }
 }

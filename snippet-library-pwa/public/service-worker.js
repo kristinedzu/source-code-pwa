@@ -106,7 +106,7 @@ self.addEventListener('fetch', async (event) => {
   //   return;
   // }
   event.respondWith(caches.open(CACHE_NAME).then((cache) => {
-    try{
+    try {
     switch (event.request.destination) {
       case ('document'):
       case ('build'):
