@@ -27,7 +27,8 @@ export async function action({ request, params }) {
       console.log(snippet.favorite);
       return null;
     case "update":
-      await db.models.Snippet.findByIdAndUpdate(params.snippetId, { title: formData.get("title"), lang: formData.get("lang"), code: formData.get("code"), description: formData.get("description") });
+      const snippetToUpdate = await db.models.Snippet.findById(params.snippetId);
+      await db.models.Snippet.findByIdAndUpdate(params.snippetId, { title: snippetToUpdate.title, lang: snippetToUpdate.lang, code: formData.get("code"), description: snippetToUpdate.description });
       return null;
   }
 }

@@ -2,6 +2,7 @@ import { useLoaderData, useCatch, useFormAction, json, redirect, Form } from "re
 import connectDb from "~/db/connectDb.server.js";
 import copyCode from  "~/components/copy.js";
 import Editor from "@monaco-editor/react";
+import { useState } from "react";
 
 export async function loader({ params }) {
   const db = await connectDb();
@@ -18,6 +19,8 @@ export async function action({ request, params }) {
   const formData = await request.formData();
   const db = await connectDb();
   const snippet = await db.models.Snippet.findById(params.snippetId);
+
+
   switch (formData.get("_method")) {
     case "delete":
       await db.models.Snippet.findByIdAndDelete(params.snippetId);
@@ -28,18 +31,20 @@ export async function action({ request, params }) {
       console.log(snippet.favorite);
       return null;
     case "update":
-      await db.models.Snippet.findByIdAndUpdate(params.snippetId, { title: formData.get("title"), lang: formData.get("lang"), code: formData.get("code"), description: formData.get("description") });
+      const snippetToUpdate = await db.models.Snippet.findById(params.snippetId);
+      await db.models.Snippet.findByIdAndUpdate(params.snippetId, { title: snippetToUpdate.title, lang: snippetToUpdate.lang, code: formData.get("code"), description: snippetToUpdate.description });
       return null;
-      // const thisSnippet = await db.models.Snippet.findById(params.snippetId);
-      // thisSnippet.code = formData.get("code");
-      // await thisSnippet.save();
-      // return null;
   }
 }
 
 
 export default function SnippetPage() {
   const snippet = useLoaderData();
+  const [snippetCode, setSnippetCode] = useState(snippet.code);
+  function handleEditorChange(value, event) {
+    setSnippetCode(value);
+  }
+
     
   return (
     <div className="mb-4">
@@ -62,7 +67,8 @@ export default function SnippetPage() {
         name="code"
         height="50vh"
         defaultLanguage="javascript"
-        value={snippet.code}
+        value={snippetCode}
+        onChange={handleEditorChange}
       />
       {/* <code>
         <pre>
@@ -126,6 +132,7 @@ export default function SnippetPage() {
         </button> */}
         <Form method="post">
             <input type="hidden" name="_method" value="update" />
+            <input type="hidden" name="code" value={snippetCode} />
             <button type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
              Save
             </button>
