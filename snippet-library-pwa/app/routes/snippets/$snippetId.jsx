@@ -2,10 +2,13 @@ import { useLoaderData, useCatch, useFormAction, json, redirect, Form } from "re
 import connectDb from "~/db/connectDb.server.js";
 import copyCode from  "~/components/copy.js";
 import Editor from "@monaco-editor/react";
+import { getSession } from "../sessions.js";
+
 
 export async function loader({ params }) {
   const db = await connectDb();
   const snippet = await db.models.Snippet.findById(params.snippetId);
+
   if (!snippet) {
     throw new Response(`Couldn't find snippet with id ${params.snippetId}`, {
       status: 404,
@@ -18,11 +21,33 @@ export async function action({ request, params }) {
   const formData = await request.formData();
   const db = await connectDb();
   const snippet = await db.models.Snippet.findById(params.snippetId);
+
+  const session = await getSession(request.headers.get("Cookie"));
+  const user = await db.models.User.findById(session.get("userId"));
+
   switch (formData.get("_method")) {
     case "delete":
       await db.models.Snippet.findByIdAndDelete(params.snippetId);
       return redirect("/snippets");
     case "favorite":
+      console.log(user.username);
+      if(user.favSnippets) {
+        console.log("test")
+      }
+      else {
+        db.models.User.update(
+          { _id: user._id }, 
+          { $push: { favSnippets: snippet._id } }
+          
+        );
+
+        // user.favSnippets.push(snippet);
+        // user.save();  
+
+        // user.favSnippets = snippet._id ;
+        // console.log(user.favSnippets);
+      }
+
       snippet.favorite = !snippet.favorite;
       await snippet.save();
       console.log(snippet.favorite);
