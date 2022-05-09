@@ -34,7 +34,7 @@ self.addEventListener('activate', (event) => {
   })());
 
   // // Tell the active service worker to take control of the page immediately.
-  // self.clients.claim();
+   self.clients.claim();
 });
 
 // self.addEventListener('fetch', function(event) {
@@ -102,47 +102,53 @@ self.addEventListener('fetch', async (event) => {
   //   return;
   // }
   event.respondWith(caches.open(CACHE_NAME).then((cache) => {
-  switch (event.request.destination) {
-    case ('document'):
-    case ('build'):
-    case (""):
-    case ('manifest'):
-      //Open the cache
-        return cache.match(event.request).then((cachedResponse) => {
-          const fetchedResponse = fetch(event.request).then((networkResponse) => {
-            if(networkResponse.statusText == "OK"){
-              cache.put(event.request, networkResponse.clone());
-    
-              return networkResponse;
-            }
-          });
-  
-          return cachedResponse || fetchedResponse;
-        });
-      case ('style'):
-      case ('script'):
-      case ('image'):
-      case ('font'):
-          // Go to the cache first
-          return cache.match(event.request.url).then((cachedResponse) => {
-            // Return a cached response if we have one
-            if (cachedResponse) {
-              return cachedResponse;
-            }
-    
-            // Otherwise, hit the network
-            return fetch(event.request).then((fetchedResponse) => {
-              // Add the network response to the cache for later visits
-              cache.put(event.request, fetchedResponse.clone());
-    
-              // Return the network response
-              return fetchedResponse;
+    try{
+    switch (event.request.destination) {
+      case ('document'):
+      case ('build'):
+      case (""):
+      case ('manifest'):
+        //Open the cache
+          return cache.match(event.request).then((cachedResponse) => {
+            const fetchedResponse = fetch(event.request).then((networkResponse) => {
+              if(networkResponse.statusText == "OK"){
+                cache.put(event.request, networkResponse.clone());
+      
+                return networkResponse;
+              }
             });
+    
+            return cachedResponse || fetchedResponse;
           });
+        case ('style'):
+        case ('script'):
+        case ('image'):
+        case ('font'):
+            // Go to the cache first
+            return cache.match(event.request.url).then((cachedResponse) => {
+              // Return a cached response if we have one
+              if (cachedResponse) {
+                return cachedResponse;
+              }
+      
+              // Otherwise, hit the network
+              return fetch(event.request).then((fetchedResponse) => {
+                // Add the network response to the cache for later visits
+                cache.put(event.request, fetchedResponse.clone());
+      
+                // Return the network response
+                return fetchedResponse;
+              });
+            });
     }
-
-  return;
+  } catch (error) {
+    console.log('[Service Worker] Fetch failed; returning offline page instead.', error);
+    return null;
+  }
+    // return;
   }))
+  
+
 });
 
 
