@@ -28,7 +28,6 @@ export async function action({ request, params }) {
     case "favorite":
       snippet.favorite = !snippet.favorite;
       await snippet.save();
-      console.log(snippet.favorite);
       return null;
     case "update":
       const snippetToUpdate = await db.models.Snippet.findById(params.snippetId);
