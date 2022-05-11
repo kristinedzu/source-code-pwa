@@ -79,7 +79,7 @@ export default function App() {
         <Links />
       </head>
       <body className="bg-slate-100 text-slate-800 font-sans grid sm:grid-cols-[1fr] lg:grid-cols-[300px_1fr] gap-4">
-        <div onClick={openCloseNav} className="bg-slate-400 text-slate-100 p-4 sm:block md:block lg:hidden">
+        <div onClick={openCloseNav} className="bg-slate-800 text-slate-100 p-4 sm:block md:block lg:hidden">
           <i className="ri-menu-5-line mr-2"></i>
         </div>
         <nav id="nav" className="nav px-6 pb-6 bg-slate-800 min-h-screen block fixed -left-full top-12  lg:relative lg:w-auto lg:block lg:top-0 lg:left-0">

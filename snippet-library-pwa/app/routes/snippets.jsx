@@ -26,8 +26,8 @@ export default function Index() {
       <div className="border-r">
         <h1 className="text-2xl font-bold mb-10">All snippets</h1>
 
-        <Form method="GET">
-          <input onChange={e => submit(e.currentTarget.form)} type="text" name="query" placeholder="Search..." className="mb-4 text-slate-600 p-2 w-96 rounded-md"/>
+        <Form method="GET" className="mr-4">
+          <input onChange={e => submit(e.currentTarget.form)} type="text" name="query" placeholder="Search..." className="mb-4 text-slate-600 p-2 w-full rounded-md "/>
         </Form>
         <ul className="mt-5 list-disc mr-4">
           {data.snippets.map((snippet) => {
