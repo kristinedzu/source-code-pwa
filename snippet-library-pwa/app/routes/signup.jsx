@@ -94,7 +94,7 @@ return (
             Type your Password
             </label>
             <input
-            type="text"
+            type="password"
             name="password"
             id="password"
             className="mb-4 text-slate-600 p-2 w-96"
