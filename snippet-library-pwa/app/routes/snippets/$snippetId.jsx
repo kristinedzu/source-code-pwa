@@ -1,18 +1,24 @@
 import { useLoaderData, useCatch, useFormAction, json, redirect, Form } from "remix";
+import { getSession, commitSession } from "./../sessions.js";
 import connectDb from "~/db/connectDb.server.js";
 import copyCode from  "~/components/copy.js";
 import Editor from "@monaco-editor/react";
 import { useState, useEffect } from "react";
 
-export async function loader({ params }) {
+export async function loader({ params, request }) {
   const db = await connectDb();
+  const session = await getSession(request.headers.get("Cookie"));
   const snippet = await db.models.Snippet.findById(params.snippetId);
   if (!snippet) {
     throw new Response(`Couldn't find snippet with id ${params.snippetId}`, {
       status: 404,
     });
   }
-  return json(snippet);
+  const user = await db.models.User.findById(session.get("userId"));
+  return json({
+     user,
+     snippet,
+  });
 }
 
 export async function action({ request, params }) {
@@ -26,8 +32,16 @@ export async function action({ request, params }) {
       await db.models.Snippet.findByIdAndDelete(params.snippetId);
       return redirect("/snippets");
     case "favorite":
-      snippet.favorite = !snippet.favorite;
-      await snippet.save();
+      const session = await getSession(request.headers.get("Cookie"));
+      const db = await connectDb();
+      const loggedUser= await db.models.User.findById(session.get("userId"));
+      const snippetToSave = await db.models.Snippet.findById(params.snippetId);
+      
+      if(loggedUser.favorite.includes(snippetToSave._id)){
+        await db.models.User.findByIdAndUpdate(session.get("userId"), {$pull: {favorite: snippetToSave._id} });
+      }else{
+        await db.models.User.findByIdAndUpdate(session.get("userId"), {$push: {favorite: snippetToSave._id} });
+      }
       return null;
     case "update":
       const snippetToUpdate = await db.models.Snippet.findById(params.snippetId);
@@ -38,33 +52,34 @@ export async function action({ request, params }) {
 
 
 export default function SnippetPage() {
-  const snippet = useLoaderData();
-  const [snippetCode, setSnippetCode] = useState(snippet.code);
+  const data = useLoaderData();
+  const [snippetCode, setSnippetCode] = useState(data.snippet.code);
   function handleEditorChange(value, event) {
     setSnippetCode(value);
   }
+  console.log(data.user.favorite);
+  console.log(data.snippet._id);
 
   useEffect(() => {
-    setSnippetCode(snippet.code)
-  },[snippet.code])
-
-    
+    setSnippetCode(data.snippet.code)
+  },[data.snippet.code])
+   
   return (
     <div className="mb-4">
       <div className="flex flex-wrap items-center content-center">
-        <h2 className="text-2xl font-bold pr-4">{snippet.title}</h2>
-        <Form method="post" className="">
+        <h2 className="text-2xl font-bold pr-4">{data.snippet.title}</h2>
+        <Form method="post">
           <input type="hidden" name="_method" value="favorite" />
           <button type="submit" className="text-2xl btn-secondary">
-            <i className={snippet.favorite === true ? "ri-heart-fill" : "ri-heart-line"}></i>
+            <i className={data.user.favorite.includes(data.snippet._id) ? "ri-heart-fill" : "ri-heart-line"}></i>
           </button>
         </Form>
       </div>
       <div className="py-8">
         <label className="font-bold">Coding language:</label>
-        <p className="pb-4">{snippet.lang}</p>
+        <p className="pb-4">{data.snippet.lang}</p>
         <label className="font-bold">Description:</label>
-        <p>{snippet.description}</p>
+        <p>{data.snippet.description}</p>
       </div>
       <Editor
         name="code"
@@ -73,66 +88,7 @@ export default function SnippetPage() {
         value={snippetCode}
         onChange={handleEditorChange}
       />
-      {/* <code>
-        <pre>
-          <div className="relative lg:w-full xl:w-5/6">
-          <textarea className="py-4 pl-4 pr-10 w-full height whitespace-pre-wrap outline-none bg-white" id="codeSnippet" cols="30" rows="10" readOnly value={snippet.code}></textarea>
-          <button type="button" onClick={copyCode} className="copyButton text-2xl"><i className="ri-clipboard-line" id="copy-to"></i></button>
-          </div>
-        </pre>
-      </code> */}
       <div className="flex flex-wrap py-4">
-        {/* <input type="checkbox" className="openSidebarMenu open" id="openSidebarMenu"/>
-        <label htmlFor="openSidebarMenu" className="sidebarIconToggle"></label>
-        <div id="sidebarMenu" className="p-6 bg-slate-300 min-h-screen ">
-            <Form method="post" className="flex flex-col w-10/12 mx-auto mt-6">
-              <h2 className="text-2xl font-bold mb-4">Edit snippet</h2>
-              <input type="hidden" name="_method" value="update" />
-              <label htmlFor="title" className="">
-                Snippet title
-              </label>
-              <input
-                type="text"
-                name="title"
-                defaultValue={snippet.title}
-                className="mb-4 text-slate-600 p-2"
-              />
-              <label htmlFor="lang" className="">
-                Coding language
-              </label>
-              <input
-                type="text"
-                name="lang"
-                defaultValue={snippet.lang}
-                className="mb-4 text-slate-600 p-2"
-              />
-              <label htmlFor="code" className="">
-                Code snippet
-              </label>
-              <textarea
-                type="text"
-                name="code"
-                defaultValue={snippet.code}
-                className="mb-4 text-slate-600 p-2 code"
-              />
-              <label htmlFor="description" className="">
-                Description
-              </label>
-              <textarea
-                type="text"
-                name="description"
-                defaultValue={snippet.description}
-                className="text-slate-600 p-2"
-              />
-              <br />
-              <div>
-                <button  type="submit" className="my-4 btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">Save</button>
-              </div>
-            </Form>
-        </div>
-        <button type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
-          Edit
-        </button> */}
         <Form method="post">
             <input type="hidden" name="_method" value="update" />
             <input type="hidden" name="code" value={snippetCode} />

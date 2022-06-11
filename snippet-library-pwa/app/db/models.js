@@ -43,6 +43,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minLength: [3, "That's too short"],
+  },
+  favorite: {
+    type: Array,
+    required: false
   }
 });
 

@@ -4,7 +4,9 @@ import { getSession } from "./sessions.js";
 
 export async function loader( {request} ) {
   const session = await getSession(request.headers.get("Cookie"));
+  const db = await connectDb();
   loggedUserId = session.get("userId");
+  const user= await db.models.User.findById(session.get("userId"));
   if(!session.has("userId")) {
     throw redirect('/login');
   } else {

@@ -9,7 +9,9 @@ export async function loader( {request} ) {
     throw redirect('/login');
   } else {
     const db = await connectDb();
-    const snippets = await db.models.Snippet.find({uid: loggedUserId});
+    const user= await db.models.User.findById(session.get("userId"));
+    console.log(user.favorite);
+    const snippets = await db.models.Snippet.find({_id: {$in : user.favorite}});
     return snippets;
   }
   
@@ -17,17 +19,18 @@ export async function loader( {request} ) {
 
 export default function Index() {
   const snippets = useLoaderData();
+  //console.log(snippets);
 
   return (
     <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
       <div className="border-r">
         <h1 className="text-2xl font-bold mb-10">My favorite snippets</h1>
         <ul className="mt-5 list-disc mr-4">
-          {snippets.filter(snippet => snippet.favorite === true).map((snippet) => {
+          {snippets.map((snippet) => {
             return (
               <li key={snippet._id} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between">
                 <div className="flex items-center">
-                  <i className={snippet.favorite === true ? "ri-heart-fill text-teal-700 mr-2" : "ri-heart-line mr-2"}></i>
+                  {/* <i className={snippet.favorite === true ? "ri-heart-fill text-teal-700 mr-2" : "ri-heart-line mr-2"}></i> */}
                   <Link
                     to={`/favorite/${snippet._id}`}
                     className="hover:underline">

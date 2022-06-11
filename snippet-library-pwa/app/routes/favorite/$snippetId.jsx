@@ -1,16 +1,24 @@
 import { useLoaderData, useCatch, json, redirect } from "remix";
 import connectDb from "~/db/connectDb.server.js";
 import SnippetPage from "~/routes/snippets/$snippetId.jsx";
+import { getSession, commitSession } from "./../sessions.js";
 
-export async function loader({ params }) {
+
+export async function loader({ request,params }) {
   const db = await connectDb();
+  const session = await getSession(request.headers.get("Cookie"));
+
   const snippet = await db.models.Snippet.findById(params.snippetId);
   if (!snippet) {
     throw new Response(`Couldn't find snippet with id ${params.snippetId}`, {
       status: 404,
     });
   }
-  return json(snippet);
+  const user = await db.models.User.findById(session.get("userId"));
+  return json({
+     user,
+     snippet,
+  });
 }
 
 export async function action({ request, params }) {
@@ -33,7 +41,7 @@ export async function action({ request, params }) {
 }
 
 export default function Page() {
-  const snippet = useLoaderData();
+  const data = useLoaderData();
   return (
     <SnippetPage />
   );
