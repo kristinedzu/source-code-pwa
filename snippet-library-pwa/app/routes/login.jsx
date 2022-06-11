@@ -39,16 +39,21 @@ export async function action({ request }) {
 export async function loader({ request }) {
     const session = await getSession(request.headers.get("Cookie"));
     const db = await connectDb();
+    loggedUserId = session.get("userId");
+    const snippets = await db.models.Snippet.find({uid: loggedUserId});
     return json({
        user: await db.models.User.findById(session.get("userId")),
+       snippets
     });
 }
 
 export default function Login() {
-  const { user } = useLoaderData();
+  const data = useLoaderData();
   const actionData = useActionData();
 
-  if(!user) {
+  console.log(data.snippets.length);
+
+  if(!data.user) {
     return (
         <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
           <div>
@@ -84,18 +89,37 @@ export default function Login() {
       );
   } else {
     return (
-        <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
-          <div>
+        <div className="pt-7 pb-3 m-4 flex flex-col justify-between">
+          <div className="flex flex-col gap-6">
             <h1 className="text-2xl font-bold mb-10">You are logged in as:</h1>
-            <p className="mb-10">{user.username}</p>
+            <div className="flex flex-row items-center gap-1">
+              <i className="ri-account-circle-line text-lg"></i>
+              <p className="text-lg">{data.user.username}</p>
+            </div>
+
+            <div className="flex flex-row gap-4">
+              <div className="flex flex-col items-center gap-2 p-6 bg-slate-200 w-fit rounded-md">
+                <p>Your favourite snippets</p>
+                <div className="flex flex-row items-center">
+                  <i className="ri-heart-line mr-2"></i>
+                  <p className="font-semibold">{data.user.favorite.length}</p>
+                </div>
+              </div>
+              <div className="flex flex-col items-center gap-2 p-6 bg-slate-200 w-fit rounded-md">
+                <p>Your own snippets</p>
+                <div className="flex flex-row items-center">
+                  <i className="ri-book-open-line mr-2"></i>
+                  <p className="font-semibold">{data.snippets.length}</p>
+                </div>
+              </div>
+            </div>
+          </div>
     
             <Form method="post" action="/logout">
                 <button type="submit" className="btn-delete hover:bg-red-900 text-white py-2 px-4 rounded">
                     Logout
                 </button>        
             </Form>
-    
-          </div>
         </div>
       );
   }

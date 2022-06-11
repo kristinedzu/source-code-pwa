@@ -1,4 +1,4 @@
-import { useLoaderData, useCatch, useFormAction, json, redirect, Form } from "remix";
+import { useLoaderData, useCatch, useFormAction, json, redirect, Form, Link } from "remix";
 import { getSession, commitSession } from "./../sessions.js";
 import connectDb from "~/db/connectDb.server.js";
 import copyCode from  "~/components/copy.js";
@@ -15,9 +15,11 @@ export async function loader({ params, request }) {
     });
   }
   const user = await db.models.User.findById(session.get("userId"));
+  const allUsers = await db.models.User.find();
   return json({
      user,
      snippet,
+     allUsers,
   });
 }
 
@@ -66,14 +68,31 @@ export default function SnippetPage() {
    
   return (
     <div className="mb-4">
-      <div className="flex flex-wrap items-center content-center">
-        <h2 className="text-2xl font-bold pr-4">{data.snippet.title}</h2>
-        <Form method="post">
-          <input type="hidden" name="_method" value="favorite" />
-          <button type="submit" className="text-2xl btn-secondary">
-            <i className={data.user.favorite.includes(data.snippet._id) ? "ri-heart-fill" : "ri-heart-line"}></i>
-          </button>
-        </Form>
+      <div className="flex flex-wrap items-center content-center justify-between">
+        <div className="flex flex-row items-center">
+          <h2 className="text-2xl font-bold pr-4">{data.snippet.title}</h2>
+          <Form method="post">
+            <input type="hidden" name="_method" value="favorite" />
+            <button type="submit" className="text-2xl btn-secondary">
+              <i className={data.user.favorite.includes(data.snippet._id) ? "ri-heart-fill" : "ri-heart-line"}></i>
+            </button>
+          </Form>
+        </div>
+        <div className="text-xs flex flex-row gap-2 items-center">Added by: {data.allUsers?.map((user)=> data.snippet.uid.includes(user._id)?
+          <div>
+            {data.snippet.uid.includes(data.user._id)?
+              <Link to={`/login`} className="py-1/2 px-3 bg-orange-200 w-fit h-min rounded-3xl flex flex-row gap-1 items-center hover:bg-orange-300">
+                <i className="ri-account-circle-line text-orange-700 text-base"></i>
+                <p className="text-xs font-semibold text-orange-700">You</p>
+              </Link> 
+             : <Link to={`/users/${user._id}`} className="py-1/2 px-3 bg-orange-200 w-fit h-min rounded-3xl flex flex-row gap-1 items-center hover:bg-orange-300">
+             <i className="ri-account-circle-line text-orange-700 text-base"></i>
+             <p className="text-xs font-semibold text-orange-700">{user.username}</p>
+           </Link>  }
+          </div>
+          : "")
+          }
+        </div>
       </div>
       <div className="py-8">
         <label className="font-bold">Coding language:</label>

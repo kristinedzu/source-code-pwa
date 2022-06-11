@@ -15,9 +15,11 @@ export async function loader({ request,params }) {
     });
   }
   const user = await db.models.User.findById(session.get("userId"));
+  const allUsers = await db.models.User.find();
   return json({
      user,
      snippet,
+     allUsers,
   });
 }
 
