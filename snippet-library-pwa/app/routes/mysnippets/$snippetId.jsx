@@ -30,11 +30,18 @@ export async function action({ request, params }) {
     case "delete":
       await db.models.Snippet.findByIdAndDelete(params.snippetId);
       return redirect("/snippets");
-    case "favorite":
-      const snippet = await db.models.Snippet.findById(params.snippetId);
-      snippet.favorite = !snippet.favorite;
-      await snippet.save();
-      return null;
+      case "favorite":
+        const session = await getSession(request.headers.get("Cookie"));
+        const db = await connectDb();
+        const loggedUser= await db.models.User.findById(session.get("userId"));
+        const snippetToSave = await db.models.Snippet.findById(params.snippetId);
+        
+        if(loggedUser.favorite.includes(snippetToSave._id)){
+          await db.models.User.findByIdAndUpdate(session.get("userId"), {$pull: {favorite: snippetToSave._id} });
+        }else{
+          await db.models.User.findByIdAndUpdate(session.get("userId"), {$push: {favorite: snippetToSave._id} });
+        }
+        return null;
     case "update":
       const snippetToUpdate = await db.models.Snippet.findById(params.snippetId);
       await db.models.Snippet.findByIdAndUpdate(params.snippetId, { title: snippetToUpdate.title, lang: snippetToUpdate.lang, code: formData.get("code"), description: snippetToUpdate.description });

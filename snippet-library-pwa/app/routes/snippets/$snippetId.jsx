@@ -56,6 +56,7 @@ export async function action({ request, params }) {
 export default function SnippetPage() {
   const data = useLoaderData();
   const [snippetCode, setSnippetCode] = useState(data.snippet.code);
+
   function handleEditorChange(value, event) {
     setSnippetCode(value);
   }

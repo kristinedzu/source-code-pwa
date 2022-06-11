@@ -41,17 +41,16 @@ export async function loader({ request }) {
     const db = await connectDb();
     loggedUserId = session.get("userId");
     const snippets = await db.models.Snippet.find({uid: loggedUserId});
+    const allUsers = await db.models.User.find();
     return json({
        user: await db.models.User.findById(session.get("userId")),
-       snippets
+       snippets,
     });
 }
 
 export default function Login() {
   const data = useLoaderData();
   const actionData = useActionData();
-
-  console.log(data.snippets.length);
 
   if(!data.user) {
     return (
@@ -101,15 +100,15 @@ export default function Login() {
               <div className="flex flex-col items-center gap-2 p-6 bg-slate-200 w-fit rounded-md">
                 <p>Your favourite snippets</p>
                 <div className="flex flex-row items-center">
-                  <i className="ri-heart-line mr-2"></i>
-                  <p className="font-semibold">{data.user.favorite.length}</p>
+                  <i className="ri-heart-line mr-2 text-xl text-indigo-500"></i>
+                  <p className="font-semibold text-xl text-indigo-500">{data.user.favorite.length}</p>
                 </div>
               </div>
               <div className="flex flex-col items-center gap-2 p-6 bg-slate-200 w-fit rounded-md">
                 <p>Your own snippets</p>
                 <div className="flex flex-row items-center">
-                  <i className="ri-book-open-line mr-2"></i>
-                  <p className="font-semibold">{data.snippets.length}</p>
+                  <i className="ri-book-open-line mr-2 text-xl text-indigo-500"></i>
+                  <p className="font-semibold text-xl text-indigo-500">{data.snippets.length}</p>
                 </div>
               </div>
             </div>
