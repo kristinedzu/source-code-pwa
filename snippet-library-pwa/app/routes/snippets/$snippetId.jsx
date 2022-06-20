@@ -27,8 +27,6 @@ export async function action({ request, params }) {
   
   const formData = await request.formData();
   const db = await connectDb();
-  const snippet = await db.models.Snippet.findById(params.snippetId);
-  console.log(snippet.snippetId);
   switch (formData.get("_method")) {
     case "delete":
       await db.models.Snippet.findByIdAndDelete(params.snippetId);
@@ -60,8 +58,6 @@ export default function SnippetPage() {
   function handleEditorChange(value, event) {
     setSnippetCode(value);
   }
-  console.log(data.user.favorite);
-  console.log(data.snippet._id);
 
   useEffect(() => {
     setSnippetCode(data.snippet.code)
@@ -72,16 +68,18 @@ export default function SnippetPage() {
       <div className="flex flex-wrap items-center content-center justify-between">
         <div className="flex flex-row items-center">
           <h2 className="text-2xl font-bold pr-4">{data.snippet.title}</h2>
-          <Form method="post">
-            <input type="hidden" name="_method" value="favorite" />
-            <button type="submit" className="text-2xl btn-secondary">
-              <i className={data.user.favorite.includes(data.snippet._id) ? "ri-heart-fill" : "ri-heart-line"}></i>
-            </button>
-          </Form>
+          {data.user ? 
+            <Form method="post">
+              <input type="hidden" name="_method" value="favorite" />
+              <button type="submit" className="text-2xl btn-secondary">
+                <i className={data?.user?.favorite?.includes(data.snippet._id) ? "ri-heart-fill" : "ri-heart-line"}></i>
+              </button>
+            </Form>
+          : null}
         </div>
         <div className="text-xs flex flex-row gap-2 items-center">Added by: {data.allUsers?.map((user)=> data.snippet.uid.includes(user._id)?
           <div>
-            {data.snippet.uid.includes(data.user._id)?
+            {data.snippet?.uid?.includes(data.user?._id)?
               <Link to={`/login`} className="py-1/2 px-3 bg-orange-200 w-fit h-min rounded-3xl flex flex-row gap-1 items-center hover:bg-orange-300">
                 <i className="ri-account-circle-line text-orange-700 text-base"></i>
                 <p className="text-xs font-semibold text-orange-700">You</p>
