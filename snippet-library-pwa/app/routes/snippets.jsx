@@ -34,7 +34,7 @@ export default function Index() {
             return (
               <li key={snippet?.key} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between sm:w-full">
                 <div className="flex items-center">
-                  {data.user.favorite.includes(snippet._id) ? <i className={ "ri-heart-fill text-teal-700 mr-2"}></i> : "" }
+                  {data.user?.favorite?.includes(snippet._id) ? <i className={ "ri-heart-fill text-teal-700 mr-2"}></i> : "" }
                   <Link
                     to={`/snippets/${snippet._id}`}
                     className="hover:underline">
