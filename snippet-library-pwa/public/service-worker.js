@@ -10,7 +10,8 @@ self.addEventListener('install', function(event) {
 self.addEventListener('activate', (event) => {
   console.log('[ServiceWorker] Activate');
   event.waitUntil((async () => {
-    // Enable navigation preload if it's supported.
+    // Enable navigation preload if it's supported - starting the network request while the service worker is booting up.
+    // See https://developers.google.com/web/updates/2017/02/navigation-preload
     if ('navigationPreload' in self.registration) {
       await self.registration.navigationPreload.enable();
     }
@@ -25,34 +26,32 @@ self.addEventListener('fetch', async (event) => {
   if (event.request.method !== "GET") {
     return;
   }
-    
-  console.log(event.request);
-  
+
+ //We open the cache and check the type of the assets, then we use the caching strategy
   event.respondWith(caches.open(CACHE_NAME).then((cache) => {
     try {
     switch (event.request.destination) {
       case ('document'):
       case ('build'):
       case ('manifest'):
-      //Network first fallback to cache
+      ////////NETWORK FIRST CALLBACK TO CACHE
         return fetch(event.request.url).then((fetchedResponse) => {
           cache.put(event.request, fetchedResponse.clone());
   
           return fetchedResponse;
         }).catch(() => {
-          // If the network is unavailable, get
+          // If the network is unavailable, get the cache 
           return cache.match(event.request.url);
         });
       //Checking if URL has the snippet.id _data
       case (""):
         if(event.request.url.includes("_data")){
-          console.log("Works");
           return fetch(event.request.url).then((fetchedResponse) => {
             cache.put(event.request, fetchedResponse.clone());
     
             return fetchedResponse;
           }).catch(() => {
-            // If the network is unavailable, get
+            // If the network is unavailable, get the cache
             return cache.match(event.request.url);
           })
         };
@@ -81,8 +80,5 @@ self.addEventListener('fetch', async (event) => {
     console.log('[Service Worker] Fetch failed; returning offline page instead.', error);
     return null;
   }
-    // return;
   }))
-  
-
-}); 
+});
