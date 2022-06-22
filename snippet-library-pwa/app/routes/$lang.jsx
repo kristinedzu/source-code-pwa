@@ -1,4 +1,4 @@
-import { useLoaderData, useCatch, json, Link, useParams, Outlet } from "remix";
+import { useLoaderData, useCatch, json, NavLink, useParams, Outlet } from "remix";
 import connectDb from "~/db/connectDb.server.js";
 import { getSession } from "./sessions.js";
 
@@ -19,7 +19,7 @@ export async function loader({ params, request }) {
 }
 
 export default function SnippetsLangPage() {
-  const { lang } = useParams()
+  const { lang } = useParams();
 
   const data = useLoaderData();
   return (
@@ -29,14 +29,21 @@ export default function SnippetsLangPage() {
         <ul className="mt-5 list-disc mr-4">
           {data.snippets.map((snippet) => {
             return (
-              <li key={snippet._id} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center">
-                {data.user?.favorite?.includes(snippet._id) ? <i className={ "ri-heart-fill text-teal-700 mr-2"}></i> : "" }
-                <Link
-                  to={`/${lang}/${snippet._id}`}
-                  className="hover:underline">
-                  {snippet.title}
-                </Link>
-              </li>
+              <NavLink to={`/${lang}/${snippet._id}`}>
+                {({ isActive }) => (
+                  <> 
+                    <li key={snippet?.key} className={isActive ? "list-none p-2 border-l bg-slate-300 mb-2 rounded-md flex items-center justify-between sm:w-full" : "list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between sm:w-full"}>
+                      <div className="flex items-center">
+                        {data.user?.favorite?.includes(snippet._id) ? <i className={ "ri-heart-fill text-teal-700 mr-2"}></i> : "" }
+                        {snippet.title}
+                      </div>
+                      <div className="py-1 px-3 bg-indigo-200 w-fit h-min rounded-3xl justify-self-end">
+                          <p className="text-xs font-semibold text-indigo-600">{snippet.lang}</p>
+                      </div>
+                    </li>
+                  </>
+                )}
+              </NavLink>
             );
           })}
         </ul>

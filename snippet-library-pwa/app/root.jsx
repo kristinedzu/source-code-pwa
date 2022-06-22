@@ -159,7 +159,6 @@ export default function App() {
             </li>
           </ul>
         </nav>
-        
         <Outlet />
         <ScrollRestoration />
         <Scripts />

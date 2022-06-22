@@ -1,4 +1,4 @@
-import { useLoaderData, useSearchParams, Link, Outlet, Form, useSubmit, json } from "remix";
+import { useLoaderData, useSearchParams, Link, Outlet, NavLink, Form, useSubmit, json } from "remix";
 import connectDb from "~/db/connectDb.server.js";
 import { getSession } from "./sessions.js";
 
@@ -32,20 +32,21 @@ export default function Index() {
         <ul className="mt-5 list-disc mr-4">
           {data.snippets.map((snippet) => {
             return (
-              <li key={snippet?.key} className="list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between sm:w-full">
-                <div className="flex items-center">
-                  {data.user?.favorite?.includes(snippet._id) ? <i className={ "ri-heart-fill text-teal-700 mr-2"}></i> : "" }
-                  <Link
-                    to={`/snippets/${snippet._id}`}
-                    className="hover:underline">
-                    {snippet.title}
-                  </Link>
-                </div>
-                <div className="py-1 px-3 bg-indigo-200 w-fit h-min rounded-3xl justify-self-end">
-                    <p className="text-xs font-semibold text-indigo-600">{snippet.lang}</p>
-                </div>
-              </li>
-              
+              <NavLink to={`/snippets/${snippet._id}`}>
+                  {({ isActive }) => (
+                    <> 
+                      <li key={snippet?.key} className={isActive ? "list-none p-2 border-l bg-slate-300 mb-2 rounded-md flex items-center justify-between sm:w-full" : "list-none p-2 border-l bg-slate-200 hover:bg-slate-300 mb-2 rounded-md flex items-center justify-between sm:w-full"}>
+                        <div className="flex items-center">
+                          {data.user?.favorite?.includes(snippet._id) ? <i className={ "ri-heart-fill text-teal-700 mr-2"}></i> : "" }
+                          {snippet.title}
+                        </div>
+                        <div className="py-1 px-3 bg-indigo-200 w-fit h-min rounded-3xl justify-self-end">
+                            <p className="text-xs font-semibold text-indigo-600">{snippet.lang}</p>
+                        </div>
+                      </li>
+                    </>
+                  )}
+              </NavLink>
             );
           })}
         </ul>
