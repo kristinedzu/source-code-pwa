@@ -12,20 +12,23 @@ export async function loader( {request} ) {
   } else {
     const db = await connectDb();
     const snippets = await db.models.Snippet.find({uid: loggedUserId});
-    return snippets;
+    return json ({
+      snippets,
+      user,
+    });
   }
   
 }
 
 export default function Index() {
-  const snippets = useLoaderData();
+  const data = useLoaderData();
 
   return (
     <div className="pt-7 pb-3 m-4 grid xl:grid-cols-[400px_1fr] gap-4 grid-cols-1">
       <div className="border-r">
         <h1 className="text-2xl font-bold mb-10">My snippets</h1>
         <ul className="mt-5 list-disc mr-4">
-          {snippets.map((snippet) => {
+          {data.snippets.map((snippet) => {
             return (
               <NavLink to={`/mysnippets/${snippet._id}`}>
                 {({ isActive }) => (

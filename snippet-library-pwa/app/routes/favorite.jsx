@@ -1,4 +1,4 @@
-import { useLoaderData, NavLink, Outlet, redirect } from "remix";
+import { useLoaderData, NavLink, Outlet, redirect, json } from "remix";
 import connectDb from "~/db/connectDb.server.js";
 import { getSession } from "./sessions.js";
 
@@ -12,13 +12,16 @@ export async function loader( {request} ) {
     const user= await db.models.User.findById(session.get("userId"));
     console.log(user.favorite);
     const snippets = await db.models.Snippet.find({_id: {$in : user.favorite}});
-    return snippets;
+    return json ({
+      snippets,
+      user,
+    });
   }
   
 }
 
 export default function Index() {
-  const snippets = useLoaderData();
+  const data = useLoaderData();
   //console.log(snippets);
 
   return (
@@ -26,7 +29,7 @@ export default function Index() {
       <div className="border-r">
         <h1 className="text-2xl font-bold mb-10">My favorite snippets</h1>
         <ul className="mt-5 list-disc mr-4">
-          {snippets.map((snippet) => {
+          {data.snippets.map((snippet) => {
             return (
               <NavLink to={`/favorite/${snippet._id}`}>
                 {({ isActive }) => (
@@ -37,7 +40,7 @@ export default function Index() {
                         {snippet.title}
                       </div>
                       <div className="py-1 px-3 bg-indigo-200 w-fit h-min rounded-3xl justify-self-end">
-                          <p className="text-xs font-semibold text-indigo-600">{snippet.lang}</p>
+                        <p className="text-xs font-semibold text-indigo-600">{snippet.lang}</p>
                       </div>
                     </li>
                   </>
