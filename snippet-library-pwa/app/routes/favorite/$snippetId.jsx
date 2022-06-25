@@ -32,7 +32,6 @@ export async function action({ request, params }) {
       return redirect("/snippets");
       case "favorite":
         const session = await getSession(request.headers.get("Cookie"));
-        const db = await connectDb();
         const loggedUser= await db.models.User.findById(session.get("userId"));
         const snippetToSave = await db.models.Snippet.findById(params.snippetId);
         
