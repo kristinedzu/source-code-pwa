@@ -12,9 +12,11 @@ export async function loader( {request} ) {
     const user= await db.models.User.findById(session.get("userId"));
     console.log(user.favorite);
     const snippets = await db.models.Snippet.find({_id: {$in : user.favorite}});
+    const mysnippets = await db.models.Snippet.find({uid: loggedUserId});
     return json ({
       snippets,
       user,
+      mysnippets
     });
   }
   

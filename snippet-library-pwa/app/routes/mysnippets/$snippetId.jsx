@@ -16,10 +16,12 @@ export async function loader({ params,request }) {
   }
   const user = await db.models.User.findById(session.get("userId"));
   const allUsers = await db.models.User.find();
+  const mysnippets = await db.models.Snippet.find({uid: loggedUserId});
   return json({
      user,
      snippet,
-     allUsers
+     allUsers,
+     mysnippets
   });
 }
 
