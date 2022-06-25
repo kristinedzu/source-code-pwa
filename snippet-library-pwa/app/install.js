@@ -1,4 +1,3 @@
-
 /* Only register a service worker if it's supported */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/service-worker.js');
@@ -31,4 +30,10 @@ window.addEventListener('appinstalled', (event) => {
   console.log('👍', 'appinstalled', event);
   // Clear the deferredPrompt so it can be garbage collected
   window.deferredPrompt = null;
+});
+
+navigator.serviceWorker.getRegistration('/app').then(function(registration) {
+  if(registration){
+    document.querySelector('#status').textContent = 'ServiceWorkerRegistration found.';
+  }
 });

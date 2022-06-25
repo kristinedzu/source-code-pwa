@@ -23,8 +23,8 @@ export async function loader({ params, request }) {
   });
 }
 
-export async function action({ request, params }) {
-  
+export async function action({ request, params}) {
+
   const formData = await request.formData();
   const db = await connectDb();
   switch (formData.get("_method")) {
@@ -36,12 +36,13 @@ export async function action({ request, params }) {
       const db = await connectDb();
       const loggedUser= await db.models.User.findById(session.get("userId"));
       const snippetToSave = await db.models.Snippet.findById(params.snippetId);
-      
+
       if(loggedUser.favorite.includes(snippetToSave._id)){
         await db.models.User.findByIdAndUpdate(session.get("userId"), {$pull: {favorite: snippetToSave._id} });
       }else{
         await db.models.User.findByIdAndUpdate(session.get("userId"), {$push: {favorite: snippetToSave._id} });
       }
+
       return null;
     case "update":
       const snippetToUpdate = await db.models.Snippet.findById(params.snippetId);
@@ -62,16 +63,31 @@ export default function SnippetPage() {
   useEffect(() => {
     setSnippetCode(data.snippet.code)
   },[data.snippet.code])
-   
+
+  function sendNotification(){
+    if (Notification.permission !== "denied") {
+    Notification.requestPermission().then(function (permission) {
+      // If the user accepts, let's create a notification
+      if (permission === "granted") {
+       new Notification("Hi there!");
+      }
+      });
+    }else if (Notification.permission === "granted") {
+      // If it's okay let's create a notification
+     new Notification("Hi there!");
+    }
+  }
+
+
   return (
     <div className="mb-4">
       <div className="flex flex-wrap items-center content-center justify-between">
         <div className="flex flex-row items-center">
           <h2 className="text-2xl font-bold pr-4">{data.snippet.title}</h2>
-          {data.user ? 
+          {data.user ?
             <Form method="post">
               <input type="hidden" name="_method" value="favorite" />
-              <button type="submit" className="text-2xl btn-secondary">
+              <button type="submit" className="text-2xl btn-secondary" onClick={sendNotification}>
                 <i className={data?.user?.favorite?.includes(data.snippet._id) ? "ri-heart-fill" : "ri-heart-line"}></i>
               </button>
             </Form>
@@ -83,7 +99,7 @@ export default function SnippetPage() {
               <Link to={`/login`} className="py-1/2 px-3 bg-orange-200 w-fit h-min rounded-3xl flex flex-row gap-1 items-center hover:bg-orange-300">
                 <i className="ri-account-circle-line text-orange-700 text-base"></i>
                 <p className="text-xs font-semibold text-orange-700">You</p>
-              </Link> 
+              </Link>
              : <Link to={`/users/${user._id}`} className="py-1/2 px-3 bg-orange-200 w-fit h-min rounded-3xl flex flex-row gap-1 items-center hover:bg-orange-300">
              <i className="ri-account-circle-line text-orange-700 text-base"></i>
              <p className="text-xs font-semibold text-orange-700">{user.username}</p>
@@ -129,11 +145,11 @@ export function CatchBoundary() {
   const caught = useCatch();
     return (
       <div>
-        
+
         <h1>
           {caught.status} {caught.statusText}
         </h1>
-        
+
         <h2>{caught.data}</h2>
       </div>
     );
