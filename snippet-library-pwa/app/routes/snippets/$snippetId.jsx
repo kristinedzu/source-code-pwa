@@ -9,6 +9,7 @@ export async function loader({ params, request }) {
   const db = await connectDb();
   const session = await getSession(request.headers.get("Cookie"));
   const snippet = await db.models.Snippet.findById(params.snippetId);
+  const mysnippets = await db.models.Snippet.find({uid: loggedUserId});
   if (!snippet) {
     throw new Response(`Couldn't find snippet with id ${params.snippetId}`, {
       status: 404,
@@ -20,6 +21,7 @@ export async function loader({ params, request }) {
      user,
      snippet,
      allUsers,
+     mysnippets
   });
 }
 
@@ -55,21 +57,38 @@ export async function action({ request, params}) {
 export default function SnippetPage() {
   const data = useLoaderData();
   const [snippetCode, setSnippetCode] = useState(data.snippet.code);
+  const [likes, setLikes] = useState();
 
   function handleEditorChange(value, event) {
     setSnippetCode(value);
   }
 
+  let allFavourited = data.allUsers.map((user)=> user.favorite);
+  let likesInUsers = data.mysnippets.map((snippet)=>allFavourited.map((fav)=>fav.includes(snippet._id)))
+  let yourSnippetsLikes = likesInUsers.map((like)=>like.filter(Boolean).length);
+
+  const result = yourSnippetsLikes.reduce((a, b) => a + b, 0);
+
+  console.log(result);
+  
+  if (result > likes) {
+    console.log("bigger");
+     sendNotification()
+  } else {
+    console.log("smaller");
+  }
+
   useEffect(() => {
-    setSnippetCode(data.snippet.code)
-  },[data.snippet.code])
+    setSnippetCode(data.snippet.code),
+    setLikes(result);
+  },[data.snippet.code, result])
 
   function sendNotification(){
     if (Notification.permission !== "denied") {
     Notification.requestPermission().then(function (permission) {
       // If the user accepts, let's create a notification
       if (permission === "granted") {
-       new Notification("Hi there!");
+       new Notification("Your snippet has been added to favorites!");
       }
       });
     }else if (Notification.permission === "granted") {
@@ -84,10 +103,12 @@ export default function SnippetPage() {
       <div className="flex flex-wrap items-center content-center justify-between">
         <div className="flex flex-row items-center">
           <h2 className="text-2xl font-bold pr-4">{data.snippet.title}</h2>
+          <h2 className="text-2xl font-bold pr-4">{likes}</h2>
+          <h2 className="text-2xl font-bold pr-4">{result}</h2>
           {data.user ?
             <Form method="post">
               <input type="hidden" name="_method" value="favorite" />
-              <button type="submit" className="text-2xl btn-secondary" onClick={sendNotification}>
+              <button type="submit" className="text-2xl btn-secondary">
                 <i className={data?.user?.favorite?.includes(data.snippet._id) ? "ri-heart-fill" : "ri-heart-line"}></i>
               </button>
             </Form>
