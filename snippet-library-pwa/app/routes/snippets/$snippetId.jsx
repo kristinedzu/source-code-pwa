@@ -24,7 +24,6 @@ export async function loader({ params, request }) {
 }
 
 export async function action({ request, params }) {
-  
   const formData = await request.formData();
   const db = await connectDb();
   switch (formData.get("_method")) {
@@ -61,6 +60,13 @@ export default function SnippetPage() {
   useEffect(() => {
     setSnippetCode(data.snippet.code)
   },[data.snippet.code])
+
+  function showToast(){
+    const toast = document.getElementById("toast");
+    console.log(toast);
+    toast.className="show"; 
+    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+  }
    
   return (
     <div className="mb-4">
@@ -109,7 +115,7 @@ export default function SnippetPage() {
         <Form method="post">
             <input type="hidden" name="_method" value="update" />
             <input type="hidden" name="code" value={snippetCode} />
-            <button type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
+            <button onClick={showToast} type="submit" className="btn-primary hover:bg-teal-800 text-white py-2 px-4 rounded">
              Save
             </button>
         </Form>
@@ -120,6 +126,7 @@ export default function SnippetPage() {
             </button>
         </Form>
       </div>
+      <div id="toast"><i className="ri-check-line"></i>Snippet has been saved!</div>
     </div>
   );
 }
