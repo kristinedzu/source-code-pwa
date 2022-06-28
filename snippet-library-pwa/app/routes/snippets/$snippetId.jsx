@@ -35,7 +35,6 @@ export async function action({ request, params}) {
       return redirect("/snippets");
     case "favorite":
       const session = await getSession(request.headers.get("Cookie"));
-      const db = await connectDb();
       const loggedUser= await db.models.User.findById(session.get("userId"));
       const snippetToSave = await db.models.Snippet.findById(params.snippetId);
 
@@ -57,7 +56,7 @@ export async function action({ request, params}) {
 export default function SnippetPage() {
   const data = useLoaderData();
   const [snippetCode, setSnippetCode] = useState(data.snippet.code);
-  const [likes, setLikes] = useState();
+ 
 
   function handleEditorChange(value, event) {
     setSnippetCode(value);
@@ -68,8 +67,8 @@ export default function SnippetPage() {
   let yourSnippetsLikes = likesInUsers.map((like)=>like.filter(Boolean).length);
 
   const result = yourSnippetsLikes.reduce((a, b) => a + b, 0);
-
-  console.log(result);
+  const [likes, setLikes] = useState(result);
+  
   
   if (result > likes) {
     console.log("bigger");
@@ -79,9 +78,13 @@ export default function SnippetPage() {
   }
 
   useEffect(() => {
-    setSnippetCode(data.snippet.code),
-    setLikes(result);
-  },[data.snippet.code, result])
+    setSnippetCode(data.snippet.code)
+  },[data.snippet.code])
+
+  useEffect(() => {
+    setLikes(result),
+    console.log(result);
+  })
 
   function sendNotification(){
     if (Notification.permission !== "denied") {
